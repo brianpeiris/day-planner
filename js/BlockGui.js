@@ -31,11 +31,13 @@ export default class BlockGui {
       br: false
     });
     canvas.add(rect);
+
     const textDefaults = {
       fontSize: 12,
       fontFamily: "sans-serif",
       hasControls: false
     };
+
     const time = new fabric.Text("", {
       ...textDefaults,
       originX: "left",
@@ -44,6 +46,7 @@ export default class BlockGui {
       textAlign: "center"
     });
     canvas.add(time);
+
     const duration = new fabric.Text("", {
       ...textDefaults,
       originX: "center",
@@ -51,6 +54,7 @@ export default class BlockGui {
       textAlign: "center"
     });
     canvas.add(duration);
+
     const label = new fabric.Text(block.label, {
       ...textDefaults,
       top: offset + 100,
