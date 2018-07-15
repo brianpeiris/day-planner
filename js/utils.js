@@ -6,5 +6,6 @@ export function formatDuration(duration) {
 
 export function snapTo15(pixelsPerHour, pos) {
   const pixelsPer15 = pixelsPerHour / 4;
-  return (Math.round(pos / pixelsPer15) * pixelsPer15) / pixelsPerHour;
+  const snapped = (Math.round(pos / pixelsPer15) * pixelsPer15) / pixelsPerHour;
+  return Math.floor(snapped * 100) / 100;
 }
