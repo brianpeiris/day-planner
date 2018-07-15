@@ -5,6 +5,7 @@ class Signal extends EventTarget {
       this.dispatchEvent(new CustomEvent("signal"));
     };
   }
+
   add(func) {
     this.addEventListener("signal", func);
   }
@@ -12,5 +13,6 @@ class Signal extends EventTarget {
 
 export default {
   blockChanged: new Signal(),
-  blockRemoved: new Signal()
+  blockRemoved: new Signal(),
+  newBlock: new Signal()
 };

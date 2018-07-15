@@ -1,0 +1,15 @@
+{
+  "name": "day-planner",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "browser-sync start --server --no-open --no-notify --watch --files ."
+  },
+  "devDependencies": {
+    "browser-sync": "^2.24.5",
+    "eslint": "^5.1.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.6.2",
+    "prettier": "1.13.7"
+  }
+}
