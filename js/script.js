@@ -61,6 +61,10 @@ class App {
       this.timeline.add(block);
     }
 
+    document.body.addEventListener("click", () => {
+      this.timeline.deselect();
+    });
+
     this.updateInfo();
     setInterval(this.updateInfo.bind(this), 500);
 
@@ -86,10 +90,12 @@ class App {
     });
   }
 
-  doAction() {
+  doAction(e) {
+    e.stopPropagation();
     if (this.buttonMode === buttonModes.add) {
-      signals.newBlock.dispatch();
+      signals.newBlock.dispatch({});
     } else if (this.buttonMode === buttonModes.delete) {
+      if (!this.selectedBlock) return;
       signals.removeBlock.dispatch({ block: this.selectedBlock });
     } else {
       throw new Error(`Invalid button mode "${this.buttonMode}"`);

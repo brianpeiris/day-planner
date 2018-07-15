@@ -23,5 +23,6 @@ span { padding-right: 0.5em; }
 }
 
 #actionButton {
-  margin: 0 1em;
+  margin: 0;
+  margin-right: 1em;
 }

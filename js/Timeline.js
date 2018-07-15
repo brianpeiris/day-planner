@@ -15,6 +15,10 @@ export default class Timeline {
     this._canvas.allowTouchScrolling = true;
     this._pixelsPerHour = innerWidth / 24;
 
+    canvasEl.parentNode.addEventListener("click", e => {
+      e.stopPropagation();
+    });
+
     this._colors = [];
     const numColors = 10;
     for (let i = 0; i < numColors; i++) {
@@ -75,5 +79,10 @@ export default class Timeline {
 
   _getNextColor() {
     return this._colors[++this._colorCounter % this._colors.length];
+  }
+
+  deselect() {
+    this._canvas.discardActiveObject();
+    this.render();
   }
 }
