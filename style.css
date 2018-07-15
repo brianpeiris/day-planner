@@ -4,6 +4,7 @@ html, body {
   font-family: sans-serif;
   line-height: unset;
 }
+
 div, span { display: block; }
 
 .info { display: flex; margin-left: 1em; flex-wrap: wrap; }
