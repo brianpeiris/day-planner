@@ -6,6 +6,7 @@
     "start": "browser-sync start --server --no-open --no-notify --watch --files ."
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.6",
     "browser-sync": "^2.24.5",
     "eslint": "^5.1.0",
     "eslint-config-prettier": "^2.9.0",

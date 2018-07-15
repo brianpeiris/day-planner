@@ -1,8 +1,8 @@
 class Signal extends EventTarget {
   constructor() {
     super();
-    this.dispatch = () => {
-      this.dispatchEvent(new CustomEvent("signal"));
+    this.dispatch = detail => {
+      this.dispatchEvent(new CustomEvent("signal", { detail }));
     };
   }
 

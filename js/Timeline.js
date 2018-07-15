@@ -1,4 +1,6 @@
 /* global fabric */
+
+import { snapTo15 } from "./utils.js";
 import BlockGui from "./BlockGui.js";
 import signals from "./signals.js";
 
@@ -53,7 +55,9 @@ export default class Timeline {
     this._canvas.add(this._now);
     this._canvas.on("mouse:dblclick", e => {
       if (e.target !== null) return;
-      signals.newBlock.dispatch();
+      signals.newBlock.dispatch({
+        start: snapTo15(this._pixelsPerHour, e.pointer.x)
+      });
     });
   }
 

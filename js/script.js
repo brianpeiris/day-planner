@@ -69,10 +69,10 @@ class App {
     updateInfo();
     setInterval(updateInfo, 500);
 
-    signals.newBlock.add(() => {
-      const label = prompt();
+    signals.newBlock.add(e => {
+      const label = prompt("Name and duration:");
       if (!label || !label.trim()) return;
-      const block = new Block(label);
+      const block = new Block(label, e.detail.start);
       blocks.push(block);
       updateUrl();
       timeline.add(block);

@@ -1,12 +1,11 @@
 /* global fabric */
 
-import { formatDuration } from "./utils.js";
+import { formatDuration, snapTo15 } from "./utils.js";
 import signals from "./signals.js";
 
 export default class BlockGui {
   constructor(block, color, canvas, pixelsPerHour) {
     const offset = 10;
-    const pixelsPer15 = pixelsPerHour / 4;
     const rect = new fabric.Rect({
       left: block.start * pixelsPerHour,
       top: offset + 35,
@@ -32,10 +31,13 @@ export default class BlockGui {
       br: false
     });
     canvas.add(rect);
-    const time = new fabric.Text("", {
+    const textDefaults = {
       fontSize: 12,
       fontFamily: "sans-serif",
-      hasControls: false,
+      hasControls: false
+    };
+    const time = new fabric.Text("", {
+      ...textDefaults,
       originX: "left",
       top: offset,
       angle: 60,
@@ -43,18 +45,14 @@ export default class BlockGui {
     });
     canvas.add(time);
     const duration = new fabric.Text("", {
-      fontSize: 14,
-      fontFamily: "sans-serif",
-      hasControls: false,
+      ...textDefaults,
       originX: "center",
       top: offset + 60,
       textAlign: "center"
     });
     canvas.add(duration);
     const label = new fabric.Text(block.label, {
-      fontSize: 14,
-      fontFamily: "sans-serif",
-      hasControls: false,
+      ...textDefaults,
       top: offset + 100,
       angle: 60
     });
@@ -72,7 +70,7 @@ export default class BlockGui {
     updateText();
 
     function snapLeft() {
-      const snappedLeft = (Math.round(rect.left / pixelsPer15) * pixelsPer15) / pixelsPerHour;
+      const snappedLeft = snapTo15(pixelsPerHour, rect.left);
       block.start = Math.min(24 - block.duration, Math.max(0, snappedLeft));
       rect.left = block.start * pixelsPerHour;
     }
@@ -81,7 +79,7 @@ export default class BlockGui {
     rect.on("moved", signals.blockChanged.dispatch);
 
     function snapWidth() {
-      const snappedWidth = (Math.round(rect.getScaledWidth() / pixelsPer15) * pixelsPer15) / pixelsPerHour;
+      const snappedWidth = snapTo15(pixelsPerHour, rect.getScaledWidth());
       block.duration = Math.min(24 - block.start, Math.max(0.25, snappedWidth));
       rect.scaleX = 1;
       rect.width = block.duration * pixelsPerHour;
