@@ -21,3 +21,7 @@ span { padding-right: 0.5em; }
   font-size: 18pt;
   display: inline-block;
 }
+
+#actionButton {
+  margin: 0 1em;
+}

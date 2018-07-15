@@ -88,7 +88,16 @@ export default class BlockGui {
     rect.on("scaling", updateText);
     rect.on("scaled", signals.blockChanged.dispatch);
     rect.on("mousedblclick", () => {
-      signals.blockRemoved.dispatch();
+      signals.removeBlock.dispatch({ block });
+    });
+    rect.on("deselected", () => {
+      signals.blockDeselected.dispatch({ block });
+    });
+    rect.on("selected", () => {
+      signals.blockSelected.dispatch({ block });
+    });
+    signals.blockRemoved.add(({ block: _block }) => {
+      if (_block !== block) return;
       canvas.remove(rect);
       canvas.remove(label);
       canvas.remove(time);
