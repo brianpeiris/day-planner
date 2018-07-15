@@ -91,6 +91,7 @@ export default class BlockGui {
     rect.on("scaling", snapWidth);
     rect.on("scaling", updateText);
     rect.on("scaled", signals.blockChanged.dispatch);
+
     rect.on("mousedblclick", () => {
       signals.removeBlock.dispatch({ block });
     });
