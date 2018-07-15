@@ -72,12 +72,16 @@ class App {
     signals.newBlock.add(e => {
       const input = prompt("Name and duration:");
       if (!input || !input.trim()) return;
+
       const parts = input.split(" ");
       const duration = parseDuration(last(parts));
       const label = duration ? parts.slice(0, -1).join(" ") : input;
+
       const block = new Block(label, e.detail.start, duration || 1);
+
       this.blocks.push(block);
       updateUrl();
+
       this.timeline.add(block);
     });
 
