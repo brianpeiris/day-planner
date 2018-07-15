@@ -52,10 +52,6 @@ class App {
     this.blocks.sort((a, b) => a.start - b.start);
     window.blocks = this.blocks;
 
-    function updateUrl() {
-      history.replaceState(null, null, "?" + new URLSearchParams({ blocks: btoa(JSON.stringify(this.blocks)) }));
-    }
-
     const canvasEl = document.getElementById("timeline");
     this.timeline = new Timeline(canvasEl);
 
@@ -69,26 +65,32 @@ class App {
     this.updateInfo();
     setInterval(this.updateInfo.bind(this), 500);
 
-    signals.newBlock.add(e => {
-      const input = prompt("Name and duration:");
-      if (!input || !input.trim()) return;
+    signals.newBlock.add(this.promptAndAddBlock.bind(this));
 
-      const parts = input.split(" ");
-      const duration = parseDuration(last(parts));
-      const label = duration ? parts.slice(0, -1).join(" ") : input;
-
-      const block = new Block(label, e.detail.start, duration || 1);
-
-      this.blocks.push(block);
-      updateUrl();
-
-      this.timeline.add(block);
-    });
-
-    signals.blockChanged.add(updateUrl);
+    signals.blockChanged.add(this.updateUrl.bind(this));
     signals.blockRemoved.add(block => {
       this.blocks.splice(this.blocks.indexOf(block), 1);
     });
+  }
+
+  updateUrl() {
+    history.replaceState(null, null, "?" + new URLSearchParams({ blocks: btoa(JSON.stringify(this.blocks)) }));
+  }
+
+  promptAndAddBlock(e) {
+    const input = prompt("Name and duration:");
+    if (!input || !input.trim()) return;
+
+    const parts = input.split(" ");
+    const duration = parseDuration(last(parts));
+    const label = duration ? parts.slice(0, -1).join(" ") : input;
+
+    const block = new Block(label, e.detail.start, duration || 1);
+
+    this.blocks.push(block);
+    this.updateUrl();
+
+    this.timeline.add(block);
   }
 
   updateInfo() {
