@@ -26,10 +26,8 @@ const minutes = {
 };
 function parseDuration(str) {
   const parts = str.match(/((\d+)h)?((\d+)m?)?/);
-  console.log(parts);
   let hour = parts[2] ? parseInt(parts[2], 10) : 0;
   let min = parts[4] ? minutes[parts[4]] : 0;
-  console.log(hour, min);
   if (!hour && !min) {
     hour = parseInt(parts[4], 10);
     min = 0;
@@ -59,7 +57,6 @@ class App {
     }
 
     const canvasEl = document.getElementById("timeline");
-
     const timeline = new Timeline(canvasEl);
 
     for (const block of blocks) {
