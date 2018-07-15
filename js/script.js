@@ -19,6 +19,29 @@ function fromJSON(klass, jobj) {
   return obj;
 }
 
+const minutes = {
+  "15": 0.25,
+  "30": 0.5,
+  "45": 0.75
+};
+function parseDuration(str) {
+  const parts = str.match(/((\d+)h)?((\d+)m?)?/);
+  console.log(parts);
+  let hour = parts[2] ? parseInt(parts[2], 10) : 0;
+  let min = parts[4] ? minutes[parts[4]] : 0;
+  console.log(hour, min);
+  if (!hour && !min) {
+    hour = parseInt(parts[4], 10);
+    min = 0;
+  }
+  return hour + min || null;
+}
+
+function last(arr) {
+  if (!arr) return null;
+  return arr[arr.length - 1];
+}
+
 class App {
   constructor() {
     const urlBlocks = new URLSearchParams(location.search).get("blocks");
@@ -46,9 +69,9 @@ class App {
     //let mousePos = 13.2 / 24 * window.innerWidth;
     //document.body.addEventListener('mousemove', (e) => {mousePos = e.clientX});
     function updateInfo() {
-      const hour = 2.5;
+      //const hour = 2.5;
       //const hour = mousePos / window.innerWidth * 24 //(new Date() - new Date(new Date().toDateString())) / 1000/60/60;
-      //const hour = (new Date() - new Date(new Date().toDateString())) / 1000 / 60 / 60;
+      const hour = (new Date() - new Date(new Date().toDateString())) / 1000 / 60 / 60;
       timeline.setNow(hour);
 
       window.time.textContent = new Date().toTimeString().split(" ")[0];
@@ -70,9 +93,12 @@ class App {
     setInterval(updateInfo, 500);
 
     signals.newBlock.add(e => {
-      const label = prompt("Name and duration:");
-      if (!label || !label.trim()) return;
-      const block = new Block(label, e.detail.start);
+      const input = prompt("Name and duration:");
+      if (!input || !input.trim()) return;
+      const parts = input.split(" ");
+      const duration = parseDuration(last(parts));
+      const label = duration ? parts.slice(0, -1).join(" ") : input;
+      const block = new Block(label, e.detail.start, duration || 1);
       blocks.push(block);
       updateUrl();
       timeline.add(block);
