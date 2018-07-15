@@ -1,16 +1,21 @@
-/* CSS files add styling rules to your content */
-
 html, body {
-  padding:0; margin: 0; font-family: sans-serif;
+  padding:0;
+  margin: 0;
+  font-family: sans-serif;
   line-height: unset;
 }
 div, span { display: block; }
+
 .info { display: flex; margin-left: 1em; flex-wrap: wrap; }
+
 .next { display: flex; flex-direction: column; color: grey; }
+
 span { padding-right: 0.5em; }
+
 #time, #currentBlock {
   font-size: 40pt;
 }
+
 #nextBlock, #timeToNextBlock {
   font-size: 18pt;
   display: inline-block;
