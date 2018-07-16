@@ -1,5 +1,5 @@
 import Timeline from "./Timeline.js";
-import { formatDuration } from "./utils.js";
+import { formatDuration, last } from "./utils.js";
 import signals from "./signals.js";
 
 class Block {
@@ -35,11 +35,6 @@ function parseDuration(str) {
   return hour + min || null;
 }
 
-function last(arr) {
-  if (!arr) return null;
-  return arr[arr.length - 1];
-}
-
 const buttonModes = {
   add: "add",
   delete: "delete"
@@ -72,6 +67,8 @@ class App {
 
     this.buttonMode = buttonModes.add;
     window.actionButton.addEventListener("click", this.doAction.bind(this));
+
+    window.addEventListener("resize", this.timeline.resize.bind(this.timeline));
 
     signals.blockChanged.add(this.updateUrl.bind(this));
     signals.removeBlock.add(({ block }) => {
@@ -143,4 +140,4 @@ class App {
   }
 }
 
-new App();
+window.app = new App();
