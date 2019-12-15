@@ -4,15 +4,12 @@ import { snapTo15 } from "./utils.js";
 import BlockGui from "./BlockGui.js";
 import signals from "./signals.js";
 
-export default class Timeline {
+export default class TimelineGui {
   constructor(canvasEl) {
     const innerWidth = window.innerWidth;
     this._pixelsPerHour = innerWidth / 24;
 
     this._canvas = new fabric.Canvas(canvasEl);
-
-    this._colors = [];
-    this._colorCounter = 0;
 
     this._lines = [];
     this._text = [];
@@ -29,14 +26,6 @@ export default class Timeline {
 
     canvasEl.parentNode.addEventListener("click", e => {
       e.stopPropagation();
-    });
-
-    const numColors = 10;
-    for (let i = 0; i < numColors; i++) {
-      this._colors.push(`hsla(${(i / numColors) * 255}, 100%, 50%, 50%)`);
-    }
-    this._colors.sort(() => {
-      return Math.random() - 0.5;
     });
 
     const height = 180;
@@ -73,21 +62,21 @@ export default class Timeline {
     });
   }
 
+  visible(visible) {
+    this._canvas.wrapperEl.style.display = visible ? "block" : "none";
+  }
+
   setNow(hour) {
     this._hour = hour;
     this._now.left = Math.floor(this._hour * this._pixelsPerHour);
   }
 
   add(block) {
-    this._blockGuis.push(new BlockGui(block, this._getNextColor(), this._canvas, this._pixelsPerHour));
+    this._blockGuis.push(new BlockGui(block, this._canvas, this._pixelsPerHour));
   }
 
   render() {
     this._canvas.requestRenderAll();
-  }
-
-  _getNextColor() {
-    return this._colors[++this._colorCounter % this._colors.length];
   }
 
   deselect() {

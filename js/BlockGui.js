@@ -1,10 +1,9 @@
 /* global fabric */
-
-import { formatDuration, snapTo15 } from "./utils.js";
+import { formatDuration, snapTo15, formatTime } from "./utils.js";
 import signals from "./signals.js";
 
 export default class BlockGui {
-  constructor(block, color, canvas, pixelsPerHour) {
+  constructor(block, canvas, pixelsPerHour) {
     this._block = block;
     this._pixelsPerHour = pixelsPerHour;
     const offset = 10;
@@ -15,7 +14,7 @@ export default class BlockGui {
       originY: "top",
       width: block.duration * pixelsPerHour,
       height: 60,
-      fill: color,
+      fill: block.color,
       hasRotatingPoint: false,
       lockSkewingY: true,
       lockMovementY: true,
@@ -111,7 +110,7 @@ export default class BlockGui {
     this._duration.left = mid;
     this._label.left = start;
     this._time.left = start;
-    this._time.text = `${Math.floor(block.start)}:${Math.round((block.start % 1) * 60) || "00"}`;
+    this._time.text = formatTime(block.start);
     this._duration.text = block.duration === 0.25 ? "" : formatDuration(block.duration);
   }
   resize(pixelsPerHour) {

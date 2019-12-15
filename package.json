@@ -3,14 +3,28 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "browser-sync start --server --no-open --no-notify --watch --files ."
+    "start": "webpack-dev-server",
+    "build": "webpack --mode production"
   },
   "devDependencies": {
-    "babel-eslint": "^8.2.6",
-    "browser-sync": "^2.24.5",
+    "@babel/core": "^7.6.0",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/plugin-transform-react-jsx": "^7.3.0",
+    "babel-eslint": "^10.0.3",
+    "babel-loader": "^8.0.6",
+    "browser-sync": "^2.26.7",
     "eslint": "^5.1.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-prettier": "^2.6.2",
-    "prettier": "1.13.7"
+    "eslint-plugin-react": "^7.14.3",
+    "prettier": "^1.19.1",
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.8",
+    "webpack-dev-server": "^3.8.0"
+  },
+  "dependencies": {
+    "fabric": "^3.4.0",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
   }
 }
