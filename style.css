@@ -7,11 +7,27 @@ html, body {
 
 div, span { display: block; }
 
+#container.widget {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: black;
+}
+
 .info { 
   display: flex; 
   margin-left: 1em;
   flex-wrap: wrap;
   align-items: center;
+}
+
+.widget .info {
+  flex-direction: column;
+  overflow: hidden;
+  margin-left: 0;
+  color: white;
 }
 
 .next { display: flex; flex-direction: column; color: grey; }
@@ -20,6 +36,13 @@ span { padding-right: 0.5em; }
 
 #time, #currentBlock {
   font-size: 24pt;
+}
+
+.widget #currentBlock {
+  font-size: 18pt;
+}
+.widget #nextBlock, .widget #timeToNextBlock {
+  font-size: 14pt;
 }
 
 #nextBlock, #timeToNextBlock {
@@ -73,4 +96,27 @@ span { padding-right: 0.5em; }
 .blockInfo span {
   display: inline;
   white-space: nowrap;
+}
+
+#quarters {
+  width: calc(14px * 20 + 2px * 6);
+  padding-bottom: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  background: black;
+}
+
+.quarter {
+  margin: 4px 2px 0 2px;
+  outline: 1px solid black;
+  width: 10px;
+  height: 10px;
+}
+
+.quarter:nth-child(4n + 1) {
+  margin-left: 4px;
+}
+
+.quarter.active {
+  outline-color: white;
 }

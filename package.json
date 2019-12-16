@@ -23,6 +23,7 @@
     "webpack-dev-server": "^3.8.0"
   },
   "dependencies": {
+    "classnames": "^2.2.6",
     "fabric": "^3.4.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0"

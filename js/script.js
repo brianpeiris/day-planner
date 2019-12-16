@@ -1,6 +1,7 @@
 import "fabric";
 import React from "react";
 import ReactDOM from "react-dom";
+import cx from "classnames";
 
 import TimelineGui from "./TimelineGui.js";
 import { formatDuration, last, parseDuration, fromJSON, formatTime } from "./utils.js";
@@ -48,6 +49,8 @@ class App extends React.Component {
       hour: 0,
       buttonMode: buttonModes.add
     };
+
+    this.quarters = Array.from({ length: 96 }).map(() => ({ color: null, active: false }));
 
     const urlBlocks = new URLSearchParams(location.search).get("blocks");
     this.blocks = [];
@@ -131,14 +134,14 @@ class App extends React.Component {
     const { hour } = this.state;
 
     const sorted = this.blocks.slice(0).sort((a, b) => a.start - b.start);
-    const current = sorted
-      .slice(0)
-      .reverse()
-      .find(block => block.start <= hour && hour < block.start + block.duration);
+    const reversed = sorted.slice(0).reverse();
+    const current = reversed.find(block => block.start <= hour && hour < block.start + block.duration);
     const next = sorted.find(block => block.start > hour);
 
+    const widget = new URLSearchParams(location.search).get("widget") !== null;
+
     const wide = matchMedia("(min-width: 900px)").matches;
-    this.timelineGui.visible(wide);
+    this.timelineGui.visible(wide && !widget);
     if (wide) {
       this.timelineGui.setNow(hour);
       this.timelineGui.render();
@@ -146,10 +149,23 @@ class App extends React.Component {
 
     const adjust = val => val * 60;
 
+    const minute = hour * 60;
+    for (let i = 0; i < this.quarters.length; i++) {
+      const quarter = this.quarters[i];
+      const current = i * 15;
+      quarter.active = minute >= current && minute < (i + 1) * 15;
+      quarter.color = "black";
+      for (const block of sorted) {
+        if (current >= block.start * 60 && current < block.start * 60 + block.duration * 60) {
+          quarter.color = block.color;
+        }
+      }
+    }
+
     return (
-      <>
+      <div id="container" className={cx({ widget })}>
         <div className="info">
-          {wide && (
+          {!widget && wide && (
             <button
               id="actionButton"
               onClick={this.doAction}
@@ -160,14 +176,14 @@ class App extends React.Component {
               </i>
             </button>
           )}
-          <span id="time">{new Date().toTimeString().split(" ")[0]}</span>
+          {!widget && <span id="time">{new Date().toTimeString().split(" ")[0]}</span>}
           <span id="currentBlock">{current && current.label}</span>
           <div className="next">
             <span id="nextBlock">{next && next.label}</span>
             <span id="timeToNextBlock">{next && formatDuration(next.start - hour)}</span>
           </div>
         </div>
-        {!wide && (
+        {!wide && !widget && (
           <div id="verticalTimeline">
             {ticks}
             {this.blocks.map((block, i) => (
@@ -190,7 +206,18 @@ class App extends React.Component {
             <div className="now" style={{ top: `${adjust(hour)}px` }} />
           </div>
         )}
-      </>
+        {widget && (
+          <div id="quarters">
+            {this.quarters.map((quarter, i) => (
+              <div
+                key={i}
+                className={cx("quarter", { active: quarter.active })}
+                style={{ backgroundColor: quarter.color }}
+              ></div>
+            ))}
+          </div>
+        )}
+      </div>
     );
   }
 }
