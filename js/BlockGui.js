@@ -19,6 +19,7 @@ export default class BlockGui {
       lockSkewingY: true,
       lockMovementY: true,
       lockScalingFlip: true,
+      lockRotation: true,
       transparentCorners: false,
       objectCaching: false
     });
@@ -30,7 +31,8 @@ export default class BlockGui {
       tr: false,
       tl: false,
       bl: false,
-      br: false
+      br: false,
+      mtr: false
     });
     canvas.add(rect);
 

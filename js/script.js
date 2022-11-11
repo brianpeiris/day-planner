@@ -168,7 +168,7 @@ class App extends React.Component {
           {!widget && wide && (
             <button
               id="actionButton"
-              onClick={this.doAction}
+              onPointerDown={this.doAction}
               className="mdl-button mdl-button--fab mdl-button--colored"
             >
               <i className="material-icons" id="actionButtonIcon">

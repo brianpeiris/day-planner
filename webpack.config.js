@@ -6,6 +6,7 @@ module.exports = {
   output: { path: __dirname },
   devtool: "inline-source-map",
   devServer: {
-    host: "0.0.0.0"
+    host: "0.0.0.0",
+    static: "."
   }
 };
