@@ -46,3 +46,6 @@ export function formatTime(time) {
     .padStart(2, "0");
   return `${hour}:${Math.round((time % 1) * 60) || "00"}`;
 }
+
+export const isDarkMode =
+  new URLSearchParams(location.search).get("dark") !== null || matchMedia("(prefers-color-scheme: dark)").matches;

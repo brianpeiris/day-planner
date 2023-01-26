@@ -1,5 +1,5 @@
 html, body {
-  padding:0;
+  padding: 0;
   margin: 0;
   font-family: sans-serif;
   line-height: unset;
@@ -119,4 +119,14 @@ span { padding-right: 0.5em; }
 
 .quarter.active {
   outline-color: white;
+}
+
+body.dark {
+  background: black;
+  color: white;
+}
+
+body.dark #actionButton {
+  background: #555;
+  color: black;
 }

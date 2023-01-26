@@ -1,5 +1,5 @@
 /* global fabric */
-import { formatDuration, snapTo15, formatTime } from "./utils.js";
+import { formatDuration, snapTo15, formatTime, isDarkMode } from "./utils.js";
 import signals from "./signals.js";
 
 export default class BlockGui {
@@ -37,6 +37,7 @@ export default class BlockGui {
     canvas.add(rect);
 
     const textDefaults = {
+      fill: isDarkMode ? "white" : "black",
       fontSize: 12,
       fontFamily: "sans-serif",
       hasControls: false

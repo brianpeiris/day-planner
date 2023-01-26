@@ -1,6 +1,6 @@
 /* global fabric */
 
-import { snapTo15 } from "./utils.js";
+import { snapTo15, isDarkMode } from "./utils.js";
 import BlockGui from "./BlockGui.js";
 import signals from "./signals.js";
 
@@ -15,7 +15,10 @@ export default class TimelineGui {
     this._text = [];
     this._blockGuis = [];
 
-    this._now = new fabric.Line([0, 20, 0, 130], { stroke: "blue", strokeWidth: 1 });
+    this._now = new fabric.Line([0, 20, 0, 130], {
+      stroke: isDarkMode ? "#b00" : "blue",
+      strokeWidth: 1
+    });
 
     this._hour = 0;
 
@@ -33,13 +36,14 @@ export default class TimelineGui {
       const line = new fabric.Line([i * this._pixelsPerHour, 0, i * this._pixelsPerHour, height], {
         evented: false,
         selectable: false,
-        stroke: "#ffaaaa",
+        stroke: isDarkMode ? "#555" : "#ffaaaa",
         strokeWidth: 1
       });
       this._lines.push(line);
       this._canvas.add(line);
 
       const text = new fabric.Text(i.toString(), {
+        fill: isDarkMode ? "white" : "black",
         evented: false,
         selectable: false,
         fontFamily: "sans-serif",

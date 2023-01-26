@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 import cx from "classnames";
 
 import TimelineGui from "./TimelineGui.js";
-import { formatDuration, last, parseDuration, fromJSON, formatTime } from "./utils.js";
+import { formatDuration, last, parseDuration, fromJSON, formatTime, isDarkMode } from "./utils.js";
 import signals from "./signals.js";
 
 class Block {
@@ -223,3 +223,6 @@ class App extends React.Component {
 }
 
 ReactDOM.render(<App />, document.getElementById("root"));
+if (isDarkMode) {
+  document.querySelector("body").classList.add("dark");
+}
