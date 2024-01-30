@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build --outDir .",
+    "build": "tsc && vite build --outDir . --base ''",
     "preview": "vite preview"
   },
   "dependencies": {
