@@ -1,6 +1,28 @@
-# day-planner
+## Usage
 
-This is a tiny planner app that I use myself.
-It lets you plan out blocks of time over the course of 24 hours and gives you information about the current and upcoming task.
+```bash
+$ npm install # or pnpm install or yarn install
+```
 
-![image](https://user-images.githubusercontent.com/79419/201256852-f604f623-d545-491f-83e6-a8eee84f2b94.png)
+### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
+
+## Available Scripts
+
+In the project directory, you can run:
+
+### `npm run dev`
+
+Runs the app in the development mode.<br>
+Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
+
+### `npm run build`
+
+Builds the app for production to the `dist` folder.<br>
+It correctly bundles Solid in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.<br>
+Your app is ready to be deployed!
+
+## Deployment
+
+Learn more about deploying your application with the [documentations](https://vitejs.dev/guide/static-deploy.html)

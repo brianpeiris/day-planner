@@ -1,0 +1,14 @@
+:root {
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  padding: 20px;
+  font-family: sans-serif;
+  background: #111;
+  color: #eee;
+}

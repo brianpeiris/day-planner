@@ -1,0 +1,29 @@
+.timelineContainer {
+  margin: 40px 0;
+}
+
+.timeline {
+  background: #333;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  line-height: 0;
+}
+
+.tick {
+  pointer-events: none;
+  box-sizing: border-box;
+  height: 100%;
+  border-left: 1px solid #eee;
+  position: absolute;
+  display: flex;
+  align-items: end;
+  padding-bottom: 15px;
+  padding-left: 5px;
+  user-select: none;
+}
+
+.nowLine {
+  border-color: #ff0000aa;
+}
