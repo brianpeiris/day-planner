@@ -14,6 +14,7 @@ interface Props {
   name: string;
   start: number;
   duration: number;
+  color: string;
   pos: number;
   width: number;
   maxPos: number;
@@ -89,6 +90,7 @@ export default function Block(props: Props) {
       style={{
         left: `${props.pos}px`,
         width: `${props.width}px`,
+        "background-color": props.color,
       }}
       onPointerDown={startMoving}
       onPointerMove={props.onHover}

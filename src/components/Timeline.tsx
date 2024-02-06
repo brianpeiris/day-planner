@@ -6,6 +6,15 @@ import { IBlock, IBlocksSignal } from "../types";
 
 import styles from "./Timeline.module.css";
 
+const COLORS = [
+  "hsl(0, 60%, 30%)",
+  "hsl(60, 60%, 30%)",
+  "hsl(120, 60%, 30%)",
+  "hsl(180, 60%, 30%)",
+  "hsl(240, 60%, 30%)",
+  "hsl(300, 60%, 30%)",
+];
+
 let id = 0;
 
 function Tick(props: { hour?: number; pos: number; class?: string }) {
@@ -90,6 +99,7 @@ export default function Timeline(props: Props) {
         name={block().name}
         start={block().start}
         duration={block().duration}
+        color={block().color}
         pos={pos()}
         width={width()}
         maxPos={timelineWidth() - width()}
@@ -147,13 +157,16 @@ export default function Timeline(props: Props) {
   function addBlock(input: string | null, start: number) {
     if (!input) return;
     const [name, duration] = parseInput(input);
+    const blockId = id++;
+    const color = COLORS[blockId % COLORS.length];
     setBlocks((blocks) => [
       ...blocks,
       createSignal({
-        id: id++,
+        id,
         name,
         start,
         duration,
+        color,
       }),
     ]);
   }

@@ -22,6 +22,7 @@ function App() {
               name: block.name,
               start: block.start,
               duration: block.duration,
+              color: block.color,
             });
           }),
         ),

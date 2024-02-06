@@ -5,6 +5,7 @@ export interface IBlock {
   name: string;
   start: number;
   duration: number;
+  color: string;
 }
 
 export type IBlockSignals = Signal<IBlock>[];
