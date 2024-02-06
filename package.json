@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build --outDir ../ --base '' ./src",
+    "dev": "cp ./src/index.html . && vite",
+    "build": "rm -rf ./assets && cp ./src/index.html . && tsc && vite build --outDir ./ --base ''",
     "preview": "vite preview"
   },
   "dependencies": {
