@@ -1,7 +1,7 @@
 import { createEffect, createSignal, For } from "solid-js";
 
 import Timeline from "./components/Timeline";
-import { IBlockSignals, IBlocksSignal } from "./types";
+import { IBlock, IBlockSignals, IBlocksSignal } from "./types";
 
 import "./App.css";
 
@@ -9,54 +9,66 @@ interface ITimeline {
   blocks: IBlocksSignal;
 }
 
-function App() {
-  const initialTimelines = (() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const timelines = urlParams.get("timelines");
-    if (timelines) {
-      return JSON.parse(atob(timelines)).map((timeline: any) => ({
-        blocks: createSignal<IBlockSignals>(
-          timeline.blocks.map((block: any) => {
-            return createSignal({
-              id: block.id,
-              name: block.name,
-              start: block.start,
-              duration: block.duration,
-              color: block.color,
-            });
-          }),
-        ),
-      }));
-    }
-    return [];
-  })();
+interface IJsonTimeline {
+  blocks: IBlock[];
+}
 
-  const [timelines, setTimelines] = createSignal<ITimeline[]>(initialTimelines);
+function createBlockSignals(blocks: IBlock[]): IBlockSignals {
+  return blocks.map((block) => createSignal(block));
+}
+
+function createTimeline(blocks: IBlock[]): ITimeline {
+  return {
+    blocks: createSignal(createBlockSignals(blocks)),
+  };
+}
+
+function getInitialTimelines(): ITimeline[] {
+  const urlParams = new URLSearchParams(window.location.search);
+  const timelines = urlParams.get("timelines");
+  if (timelines) {
+    const timelinesJson = JSON.parse(atob(timelines)) as IJsonTimeline[];
+    return timelinesJson.map((jsonTimeline) =>
+      createTimeline(jsonTimeline.blocks),
+    );
+  }
+  return [];
+}
+
+function getJSON(timelines: ITimeline[]) {
+  const jsonTimelines = timelines.map((timeline) => {
+    const [blockSignals] = timeline.blocks;
+    const blocks = blockSignals().map(([block]) => block());
+    return { blocks } as IJsonTimeline;
+  });
+  return JSON.stringify(jsonTimelines);
+}
+
+function App() {
+  const initialTimelines = getInitialTimelines();
+
+  const [timelines, setTimelines] = createSignal(initialTimelines);
 
   function addTimeline() {
-    setTimelines([...timelines(), { blocks: createSignal<IBlockSignals>([]) }]);
-  }
-
-  function getJSON() {
-    return JSON.stringify(
-      timelines().map((timeline) => {
-        const [blocks] = timeline.blocks;
-        return {
-          blocks: blocks().map(([block]) => block()),
-        };
-      }),
-    );
+    setTimelines([...timelines(), createTimeline([])]);
   }
 
   function deleteTimeline(timeline: ITimeline) {
     setTimelines(timelines().filter((other) => other !== timeline));
   }
 
+  function duplicateTimeline(timeline: ITimeline) {
+    const [blocks] = timeline.blocks;
+    const blocksCopy = blocks().map(([block]) => ({ ...block() }));
+    const newTimeline = createTimeline(blocksCopy);
+    setTimelines([...timelines(), newTimeline]);
+  }
+
   createEffect(() => {
     history.replaceState(
       {},
       "",
-      `?timelines=${encodeURIComponent(btoa(getJSON()))}`,
+      `?timelines=${encodeURIComponent(btoa(getJSON(timelines())))}`,
     );
   });
 
@@ -70,6 +82,7 @@ function App() {
             endHour={24}
             blocks={timeline.blocks}
             onDelete={() => deleteTimeline(timeline)}
+            onDuplicate={() => duplicateTimeline(timeline)}
           />
         )}
       </For>

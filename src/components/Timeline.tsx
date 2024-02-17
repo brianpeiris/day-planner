@@ -43,6 +43,7 @@ interface Props {
   endHour: number;
   blocks: IBlocksSignal;
   onDelete: () => void;
+  onDuplicate: () => void;
 }
 
 export default function Timeline(props: Props) {
@@ -214,6 +215,7 @@ export default function Timeline(props: Props) {
       >
         <input value={input()} onChange={(e) => setInput(e.target.value)} />
       </form>
+      <button onClick={props.onDuplicate}>duplicate</button>
       {showConfirmDelete() ? (
         <div>
           <button onClick={props.onDelete}>confirm</button>
