@@ -1,4 +1,5 @@
-import { createEffect, createSignal, For } from "solid-js";
+import { createEffect, createSignal, on, For } from "solid-js";
+import debounce from "lodash.debounce";
 
 import Timeline from "./components/Timeline";
 import { IBlock, IBlockSignals, IBlocksSignal } from "./types";
@@ -44,6 +45,10 @@ function getJSON(timelines: ITimeline[]) {
   return JSON.stringify(jsonTimelines);
 }
 
+const debouncedUpdateUrl = debounce((encodedTimelines: string) => {
+  history.replaceState({}, "", `?timelines=${encodedTimelines}`);
+}, 100);
+
 function App() {
   const initialTimelines = getInitialTimelines();
 
@@ -65,11 +70,8 @@ function App() {
   }
 
   createEffect(() => {
-    history.replaceState(
-      {},
-      "",
-      `?timelines=${encodeURIComponent(btoa(getJSON(timelines())))}`,
-    );
+    const encodedTimelines = encodeURIComponent(btoa(getJSON(timelines())));
+    debouncedUpdateUrl(encodedTimelines);
   });
 
   return (
