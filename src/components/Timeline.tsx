@@ -52,6 +52,7 @@ export default function Timeline(props: Props) {
   const [nextTask, setNextTask] = createSignal<IBlock | undefined>();
   const [time, setTime] = createSignal(0);
   const [input, setInput] = createSignal("");
+  const [showConfirmDelete, setShowConfirmDelete] = createSignal(false);
   const [blocks, setBlocks] = props.blocks;
   const numHours = () => props.endHour - props.startHour;
   const tickWidth = () => timelineWidth() / numHours();
@@ -213,7 +214,14 @@ export default function Timeline(props: Props) {
       >
         <input value={input()} onChange={(e) => setInput(e.target.value)} />
       </form>
-    <button onClick={props.onDelete}>delete</button>
+      {showConfirmDelete() ? (
+        <div>
+          <button onClick={props.onDelete}>confirm</button>
+          <button onClick={() => setShowConfirmDelete(false)}>cancel</button>
+        </div>
+      ) : (
+        <button onClick={() => setShowConfirmDelete(true)}>delete</button>
+      )}
     </div>
   );
 }

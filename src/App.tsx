@@ -65,7 +65,12 @@ function App() {
       <button onClick={addTimeline}>Add</button>
       <For each={timelines()}>
         {(timeline) => (
-          <Timeline startHour={0} endHour={24} blocks={timeline.blocks} onDelete={() => deleteTimeline(timeline)} />
+          <Timeline
+            startHour={0}
+            endHour={24}
+            blocks={timeline.blocks}
+            onDelete={() => deleteTimeline(timeline)}
+          />
         )}
       </For>
     </>
