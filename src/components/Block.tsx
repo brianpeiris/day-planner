@@ -23,6 +23,7 @@ interface Props {
   onStartChange: () => void;
   onChange: (pos: number, width: number) => void;
   onRemove: () => void;
+  onCycleColor: () => void;
 }
 
 export default function Block(props: Props) {
@@ -37,13 +38,17 @@ export default function Block(props: Props) {
     startX: 0,
   });
 
-  function startMoving(e: PointerEvent) {
-    setMoveStart({
-      startPos: props.pos,
-      startX: e.clientX,
-    });
-    setMoving(true);
-    props.onStartChange();
+  function handlePointerDown(e: PointerEvent) {
+    if (e.buttons === 2) {
+      props.onCycleColor();
+    } else {
+      setMoveStart({
+        startPos: props.pos,
+        startX: e.clientX,
+      });
+      setMoving(true);
+      props.onStartChange();
+    }
   }
 
   function startResizing(e: PointerEvent) {
@@ -92,7 +97,7 @@ export default function Block(props: Props) {
         width: `${props.width}px`,
         "background-color": props.color,
       }}
-      onPointerDown={startMoving}
+      onPointerDown={handlePointerDown}
       onPointerMove={props.onHover}
       onDblClick={props.onRemove}
     >

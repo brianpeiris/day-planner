@@ -90,6 +90,14 @@ export default function Timeline(props: Props) {
     setBlocks((blocks) => blocks.filter((block) => block !== blockSignal));
   }
 
+  function cycleColor(blockSignal: Signal<IBlock>) {
+    const [block, setBlock] = blockSignal;
+    setBlock({
+      ...block(),
+      color: COLORS[(COLORS.indexOf(block().color) + 1) % COLORS.length],
+    });
+  }
+
   function renderBlockSignal(blockSignal: Signal<IBlock>) {
     const [block] = blockSignal;
     const pos = () => block().start * tickWidth();
@@ -110,6 +118,7 @@ export default function Timeline(props: Props) {
         onHover={() => moveToTop(blockSignal)}
         onChange={(pos, width) => updateBlock(blockSignal, pos, width)}
         onRemove={() => removeBlock(blockSignal)}
+        onCycleColor={() => cycleColor(blockSignal)}
       />
     );
   }
@@ -215,15 +224,17 @@ export default function Timeline(props: Props) {
       >
         <input value={input()} onChange={(e) => setInput(e.target.value)} />
       </form>
-      <button onClick={props.onDuplicate}>duplicate</button>
-      {showConfirmDelete() ? (
-        <div>
-          <button onClick={props.onDelete}>confirm</button>
-          <button onClick={() => setShowConfirmDelete(false)}>cancel</button>
-        </div>
-      ) : (
-        <button onClick={() => setShowConfirmDelete(true)}>delete</button>
-      )}
+      <div class={styles.buttons}>
+        <button onClick={props.onDuplicate}>duplicate</button>
+        {showConfirmDelete() ? (
+          <>
+            <button onClick={() => setShowConfirmDelete(false)}>cancel</button>
+            <button onClick={props.onDelete}>confirm</button>
+          </>
+        ) : (
+          <button onClick={() => setShowConfirmDelete(true)}>delete</button>
+        )}
+      </div>
     </div>
   );
 }

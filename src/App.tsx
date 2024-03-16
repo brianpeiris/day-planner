@@ -33,7 +33,7 @@ function getInitialTimelines(): ITimeline[] {
       createTimeline(jsonTimeline.blocks),
     );
   }
-  return [];
+  return [createTimeline([])];
 }
 
 function getJSON(timelines: ITimeline[]) {
@@ -76,7 +76,7 @@ function App() {
 
   return (
     <>
-      <button onClick={addTimeline}>Add</button>
+      <button onClick={addTimeline}>add timeline</button>
       <For each={timelines()}>
         {(timeline) => (
           <Timeline
