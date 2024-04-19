@@ -1,5 +1,6 @@
 .timelineContainer {
   margin: 40px 0;
+  overflow: hidden;
 }
 
 .timeline {
@@ -9,6 +10,27 @@
   align-items: center;
   position: relative;
   line-height: 0;
+}
+
+.display {
+  font-size: 18px;
+  padding-top: 10px;
+}
+
+.fullscreen {
+  .display {
+    padding-left: 10px;
+  }
+}
+
+.currentTask {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.nextTaskContainer {
+  display: flex;
+  gap: 5px;
 }
 
 .tick {

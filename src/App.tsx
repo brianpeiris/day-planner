@@ -80,7 +80,6 @@ function App() {
       <For each={timelines()}>
         {(timeline) => (
           <Timeline
-            startHour={0}
             endHour={24}
             blocks={timeline.blocks}
             onDelete={() => deleteTimeline(timeline)}

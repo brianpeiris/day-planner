@@ -39,7 +39,6 @@ function floorToQuarter(value: number) {
 }
 
 interface Props {
-  startHour: number;
   endHour: number;
   blocks: IBlocksSignal;
   onDelete: () => void;
@@ -48,14 +47,17 @@ interface Props {
 
 export default function Timeline(props: Props) {
   let timelineElement: HTMLDivElement | undefined;
+  let displayElement: HTMLDivElement | undefined;
   const [timelineWidth, setTimelineWidth] = createSignal(0);
   const [nowPos, setNowPos] = createSignal(0);
   const [nextTask, setNextTask] = createSignal<IBlock | undefined>();
+  const [currentTask, setCurrentTask] = createSignal<IBlock | undefined>();
   const [time, setTime] = createSignal(0);
-  const [input, setInput] = createSignal("");
   const [showConfirmDelete, setShowConfirmDelete] = createSignal(false);
+  const [startHour, setStartHour] = createSignal(0);
+  const [isFullscreen, setIsFullscreen] = createSignal(false);
   const [blocks, setBlocks] = props.blocks;
-  const numHours = () => props.endHour - props.startHour;
+  const numHours = () => props.endHour - startHour();
   const tickWidth = () => timelineWidth() / numHours();
 
   function updateTimelineWidth() {
@@ -80,7 +82,7 @@ export default function Timeline(props: Props) {
     const [block, setBlock] = blockSignal;
     setBlock({
       ...block(),
-      start: roundToQuarter(pos / tickWidth()),
+      start: roundToQuarter(pos / tickWidth() + startHour()),
       duration: roundToQuarter(width / tickWidth()),
     });
     updateNowPos();
@@ -100,7 +102,7 @@ export default function Timeline(props: Props) {
 
   function renderBlockSignal(blockSignal: Signal<IBlock>) {
     const [block] = blockSignal;
-    const pos = () => block().start * tickWidth();
+    const pos = () => (block().start - startHour()) * tickWidth();
     const width = () => block().duration * tickWidth();
     return (
       <Block
@@ -137,6 +139,15 @@ export default function Timeline(props: Props) {
     return nextTask;
   }
 
+  function getCurrentTask(time: number) {
+    for (const blockSignal of blocks()) {
+      const [block] = blockSignal;
+      if (block().start <= time && block().start + block().duration > time) {
+        return block();
+      }
+    }
+  }
+
   function updateNowPos() {
     const now = new Date();
     const hours = now.getHours();
@@ -147,6 +158,7 @@ export default function Timeline(props: Props) {
     setNowPos(nowPos);
     setTime(time);
     setNextTask(getNextTask(time));
+    setCurrentTask(getCurrentTask(time));
   }
   setInterval(updateNowPos, 1000);
 
@@ -186,45 +198,66 @@ export default function Timeline(props: Props) {
     addBlock(prompt(), start);
   }
 
+  function fullscreen() {
+    displayElement!.requestFullscreen();
+  }
+
+  function toggleEarly() {
+    setStartHour(startHour() === 0 ? 6 : 0);
+  }
+
+  document.addEventListener("fullscreenchange", () => {
+    setIsFullscreen(document.fullscreenElement === displayElement);
+  });
+
+
   return (
     <div class={styles.timelineContainer}>
-      <div
-        ref={timelineElement}
-        class={styles.timeline}
-        onContextMenu={(e) => e.preventDefault()}
-        onPointerDown={(e) => {
-          if (e.target === e.currentTarget && e.buttons === 2) {
-            addBlockWithPrompt(
-              floorToQuarter((e.offsetX / timelineWidth()) * 24),
-            );
-          }
-        }}
-      >
-        <Show when={timelineWidth() !== 0}>
-          <For each={Array.from({ length: numHours() })}>
-            {(_, i) => <Tick hour={i()} pos={i() * tickWidth()} />}
-          </For>
-          <For each={blocks()}>{renderBlockSignal}</For>
-          <Tick pos={nowPos()} class={styles.nowLine} />
-        </Show>
+      <div ref={displayElement} class={isFullscreen() ? styles.fullscreen : ''}>
+        <div
+          ref={timelineElement}
+          class={styles.timeline}
+          onContextMenu={(e) => e.preventDefault()}
+          onPointerDown={(e) => {
+            if (e.target === e.currentTarget && e.buttons === 2) {
+              addBlockWithPrompt(
+                floorToQuarter(
+                  (e.offsetX / timelineWidth()) * (24 - startHour()) +
+                    startHour(),
+                ),
+              );
+            }
+          }}
+        >
+          <Show when={timelineWidth() !== 0}>
+            <For each={Array.from({ length: numHours() })}>
+              {(_, i) => (
+                <Tick hour={i() + startHour()} pos={i() * tickWidth()} />
+              )}
+            </For>
+            <For each={blocks()}>{renderBlockSignal}</For>
+            <Tick pos={nowPos()} class={styles.nowLine} />
+          </Show>
+        </div>
+        <div class={styles.display}>
+          <div>{formatTime(time(), { seconds: true })}</div>
+          <div class={styles.currentTask}>{currentTask()?.name}</div>
+          <div class={styles.nextTaskContainer}>
+            <div>{nextTask()?.name}</div>
+            <div>
+              {nextTask()
+                ? friendlyDuration(nextTask()!.start - time(), { full: true })
+                : ""}
+            </div>
+          </div>
+        </div>
       </div>
-      <div>{formatTime(time(), { seconds: true })}</div>
-      <div>{nextTask()?.name}</div>
-      <div>
-        {nextTask()
-          ? friendlyDuration(nextTask()!.start - time(), { full: true })
-          : ""}
-      </div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          addBlock(input(), 0);
-          setInput("");
-        }}
-      >
-        <input value={input()} onChange={(e) => setInput(e.target.value)} />
-      </form>
+
       <div class={styles.buttons}>
+        <button onClick={fullscreen}>fullscreen</button>
+        <button onClick={toggleEarly}>
+          {startHour() === 0 ? "hide" : "show"} early
+        </button>
         <button onClick={props.onDuplicate}>duplicate</button>
         {showConfirmDelete() ? (
           <>
