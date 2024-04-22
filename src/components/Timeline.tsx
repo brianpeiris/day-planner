@@ -154,7 +154,8 @@ export default function Timeline(props: Props) {
     const minutes = now.getMinutes();
     const seconds = now.getSeconds();
     const time = hours + minutes / 60 + seconds / 60 / 60;
-    const nowPos = (time / 24) * timelineWidth();
+    const nowPos =
+      ((time - startHour()) / (24 - startHour())) * timelineWidth();
     setNowPos(nowPos);
     setTime(time);
     setNextTask(getNextTask(time));
@@ -204,16 +205,16 @@ export default function Timeline(props: Props) {
 
   function toggleEarly() {
     setStartHour(startHour() === 0 ? 6 : 0);
+    updateNowPos();
   }
 
   document.addEventListener("fullscreenchange", () => {
     setIsFullscreen(document.fullscreenElement === displayElement);
   });
 
-
   return (
     <div class={styles.timelineContainer}>
-      <div ref={displayElement} class={isFullscreen() ? styles.fullscreen : ''}>
+      <div ref={displayElement} class={isFullscreen() ? styles.fullscreen : ""}>
         <div
           ref={timelineElement}
           class={styles.timeline}
