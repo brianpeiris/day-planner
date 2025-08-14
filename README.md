@@ -6,4 +6,4 @@ https://brianpeiris.github.io/day-planner/
 
 ![Screenshot from 2024-02-02 21-20-57](https://github.com/brianpeiris/day-planner/assets/79419/4b9d2f34-8cf6-4310-87ee-f9ad52538013)
 
-This project is tested with BrowserStack.
+This project is tested with BrowserStack
